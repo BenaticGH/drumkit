@@ -1,9 +1,10 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Courier New', monospace;
     background-color: black;
     color: white;
     margin: 0;
     padding: 0;
+    text-transform: lowercase;
 }
 
 .container {
@@ -46,7 +47,7 @@ button {
 
 #sequencer {
     display: grid;
-    grid-template-columns: repeat(16, 1fr);
+    grid-template-columns: auto repeat(16, 1fr);
     gap: 5px;
 }
 
@@ -66,15 +67,8 @@ button {
 }
 
 .row-label {
-    grid-column: span 16;
-    text-align: left;
-    margin-top: 10px;
-}
-
-.volume-control {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
+    text-align: right;
+    padding-right: 10px;
 }
 
 input[type="range"] {
@@ -107,4 +101,25 @@ input[type="range"]::-moz-range-thumb {
     background: white;
     cursor: pointer;
     border-radius: 50%;
+}
+
+.typewriter {
+    overflow: hidden;
+    border-right: .15em solid white;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: 
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: white; }
 }

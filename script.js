@@ -19,6 +19,7 @@ const sampleURLs = {
 const sequencer = document.getElementById('sequencer');
 const playPauseButton = document.getElementById('play-pause');
 const bpmInput = document.getElementById('bpm');
+const bpmSlider = document.getElementById('bpm-slider');
 const volumeSlider = document.getElementById('volume');
 
 const rows = ['kick', 'closedHiHat', 'openHiHat', 'snare', 'clap', 'crash'];
@@ -27,25 +28,28 @@ let isPlaying = false;
 let currentStep = 0;
 
 // Create sequencer grid
-rows.forEach(row => {
-    const rowElement = document.createElement('div');
-    rowElement.className = 'row';
-    
-    const rowLabel = document.createElement('div');
-    rowLabel.className = 'row-label';
-    rowLabel.textContent = row;
-    rowElement.appendChild(rowLabel);
+function createSequencerGrid() {
+    sequencer.innerHTML = ''; // Clear existing content
+    rows.forEach(row => {
+        const rowElement = document.createElement('div');
+        rowElement.className = 'row';
+        
+        const rowLabel = document.createElement('div');
+        rowLabel.className = 'row-label typewriter';
+        rowLabel.textContent = row;
+        rowElement.appendChild(rowLabel);
 
-    for (let i = 0; i < steps; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.dataset.row = row;
-        cell.dataset.step = i;
-        cell.addEventListener('click', toggleCell);
-        rowElement.appendChild(cell);
-    }
-    sequencer.appendChild(rowElement);
-});
+        for (let i = 0; i < steps; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = row;
+            cell.dataset.step = i;
+            cell.addEventListener('click', toggleCell);
+            rowElement.appendChild(cell);
+        }
+        sequencer.appendChild(rowElement);
+    });
+}
 
 // Toggle cell state
 function toggleCell(e) {
@@ -79,11 +83,11 @@ async function initAudioAndPlay() {
     
     if (!isPlaying) {
         Tone.Transport.start();
-        playPauseButton.textContent = 'Pause';
+        playPauseButton.textContent = 'pause';
         isPlaying = true;
     } else {
         Tone.Transport.stop();
-        playPauseButton.textContent = 'Play';
+        playPauseButton.textContent = 'play';
         isPlaying = false;
     }
 }
@@ -92,9 +96,14 @@ async function initAudioAndPlay() {
 playPauseButton.addEventListener('click', initAudioAndPlay);
 
 // BPM change
-bpmInput.addEventListener('input', () => {
-    Tone.Transport.bpm.value = parseFloat(bpmInput.value);
-});
+function updateBPM(value) {
+    Tone.Transport.bpm.value = parseFloat(value);
+    bpmInput.value = value;
+    bpmSlider.value = value;
+}
+
+bpmInput.addEventListener('input', () => updateBPM(bpmInput.value));
+bpmSlider.addEventListener('input', () => updateBPM(bpmSlider.value));
 
 // Volume change
 volumeSlider.addEventListener('input', () => {
@@ -108,7 +117,7 @@ Tone.Transport.scheduleRepeat((time) => {
     const currentCells = document.querySelectorAll(`.cell[data-step="${currentStep}"]`);
     currentCells.forEach(cell => {
         if (cell.classList.contains('active') && sampler && sampler.loaded) {
-            sampler.triggerAttackRelease(drumSamples[cell.dataset.row], '16n', time);
+            sampler.triggerAttackRelease(drumSamples[cell.dataset.row], '8n', time);
         }
     });
 
@@ -116,4 +125,26 @@ Tone.Transport.scheduleRepeat((time) => {
 }, '16n');
 
 // Set initial BPM
-Tone.Transport.bpm.value = parseFloat(bpmInput.value);
+updateBPM(120);
+
+// Typewriter animation
+function typewriter(element) {
+    const text = element.innerHTML;
+    element.innerHTML = '';
+    let i = 0;
+    const timer = setInterval(() => {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+        } else {
+            clearInterval(timer);
+            element.classList.remove('typewriter');
+        }
+    }, 50);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    createSequencerGrid();
+    const typewriterElements = document.querySelectorAll('.typewriter');
+    typewriterElements.forEach(typewriter);
+});
