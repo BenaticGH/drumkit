@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+label, input, button {
+    margin: 0 10px;
+}
+
+input[type="number"] {
+    width: 60px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    padding: 5px;
+}
+
+button {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#sequencer {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 5px;
+}
+
+.row {
+    display: contents;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+.cell.active {
+    background-color: white;
+}
+
+.row-label {
+    grid-column: span 16;
+    text-align: left;
+    margin-top: 10px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100px;
+    height: 2px;
+    background: white;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+}
